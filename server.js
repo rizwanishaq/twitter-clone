@@ -4,18 +4,15 @@ const morgan = require("morgan");
 
 const auth = require("./lib/auth");
 const routes = require("./routes");
+const connectDB = require("./lib/db");
 
 const app = express();
-app.use(
-  session({
-    secret: "this is a secrete",
-    name: "sessionId",
-    resave: false,
-    saveUninitialized: false,
-  })
-);
+app.use(morgan("combined"));
 app.use(auth.initialize);
 app.use(auth.session);
 app.use("/", routes());
 
-app.listen(8000, () => console.log("started"));
+const PORT = process.env.PORT || 8000;
+connectDB();
+
+app.listen(PORT, () => console.log(`Server started on ${PORT}`));
